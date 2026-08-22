@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CapitalFlow | Omaha System</title>
+  <link rel="stylesheet" href="style/app.css">
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="brand-title">
+      💰 CapitalFlow <span>| Omaha System</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-header" onclick="exportData()">💾 Respaldar</button>
+      <button class="btn-header" onclick="triggerImport()">📂 Cargar</button>
+      <input type="file" id="importInput" style="display:none" onchange="importData(event)">
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(event, 'dashboard')">📊 Flujo de Caja</button>
+    <button class="tab-btn" onclick="switchTab(event, 'transactions')">📝 Movimientos</button>
+    <button class="tab-btn" onclick="switchTab(event, 'savings')">🎯 Retos de Ahorro</button>
+    <button class="tab-btn" onclick="switchTab(event, 'allocation')">⚖️ Asignación 50/30/20</button>
+  </div>
+
+  <!-- 1. DASHBOARD VIEW -->
+  <div id="view-dashboard">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Ingresos Totales</div>
+        <div class="kpi-value val-income" id="kpiIncome">$0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Gastos Totales</div>
+        <div class="kpi-value val-expense" id="kpiExpense">$0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Ahorro / Inversión</div>
+        <div class="kpi-value val-saving" id="kpiSaving">$0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Flujo Libre (Neto)</div>
+        <div class="kpi-value val-net" id="kpiNet">$0</div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">
+        <span>Últimos Movimientos</span>
+        <button class="btn-header" onclick="switchTabDirect('transactions')">+ Registrar</button>
+      </div>
+      <div class="history-list" id="dashboardRecentList"></div>
+    </div>
+  </div>
+
+  <!-- 2. TRANSACTIONS VIEW -->
+  <div id="view-transactions" class="hidden">
+    <div class="section-card">
+      <div class="section-title">Nuevo Movimiento</div>
+      <form id="txForm" onsubmit="addTransaction(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tipo</label>
+            <select id="txType" onchange="updateCategories()">
+              <option value="income">💵 Ingreso</option>
+              <option value="expense">💳 Gasto</option>
+              <option value="saving">🏦 Ahorro / Inversión</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Monto ($)</label>
+            <input type="number" id="txAmount" placeholder="Ej. 50000" step="any" required>
+          </div>
+          <div class="form-group">
+            <label>Categoría</label>
+            <select id="txCategory"></select>
+          </div>
+          <div class="form-group">
+            <label>Fecha</label>
+            <input type="date" id="txDate" required>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label>Descripción / Detalle</label>
+          <input type="text" id="txDesc" placeholder="Ej. Combustible, Honorarios, Supermercado..." required>
+        </div>
+        <button type="submit" class="btn-submit">Guardar Movimiento</button>
+      </form>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">Historial Completo</div>
+      <div class="history-list" id="fullHistoryList"></div>
+    </div>
+  </div>
+
+  <!-- 3. SAVINGS VIEW -->
+  <div id="view-savings" class="hidden">
+    <!-- Reto 10 Días -->
+    <div class="section-card">
+      <div class="section-title">⚡ Reto Flash 10 Días ($2.000.000)</div>
+      <p class="section-desc">Tacha las casillas al separar el dinero diario para la meta urgente.</p>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Ahorrado</div>
+          <div class="kpi-value val-saving" id="tenDaySaved">$0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Progreso</div>
+          <div class="kpi-value" id="tenDayPct">0%</div>
+        </div>
+      </div>
+      <div class="challenge-grid grid-10" id="tenDayContainer"></div>
+    </div>
+
+    <!-- Reto 30 Días -->
+    <div class="section-card">
+      <div class="section-title">🎯 Reto Hábito 30 Días ($1.000)</div>
+      <p class="section-desc">Montos progresivos desde $10 a $56 para construir disciplina.</p>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Ahorrado</div>
+          <div class="kpi-value val-saving" id="monthSaved">$0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Progreso</div>
+          <div class="kpi-value" id="monthPct">0%</div>
+        </div>
+      </div>
+      <div class="challenge-grid" id="monthContainer"></div>
+    </div>
+  </div>
+
+  <!-- 4. ALLOCATION VIEW -->
+  <div id="view-allocation" class="hidden">
+    <div class="section-card">
+      <div class="section-title">Distribución de Flujo (Regla 50 / 30 / 20)</div>
+      <p class="section-desc">
+        "No gastes lo que queda después de ahorrar; ahorra primero y gasta lo que queda."
+      </p>
+      
+      <div class="ratio-bar">
+        <div class="ratio-segment seg-needs" id="barNeeds" style="width: 50%;"></div>
+        <div class="ratio-segment seg-wants" id="barWants" style="width: 30%;"></div>
+        <div class="ratio-segment seg-savings" id="barSavings" style="width: 20%;"></div>
+      </div>
+
+      <div class="ratio-legend">
+        <div class="legend-item" style="color: var(--expense);">
+          Gastos Básicos (Necesidades)
+          <span id="allocNeedsPct">0%</span>
+        </div>
+        <div class="legend-item" style="color: var(--accent);">
+          Gastos Variables / Ocio
+          <span id="allocWantsPct">0%</span>
+        </div>
+        <div class="legend-item" style="color: var(--income);">
+          Tasa de Ahorro / Inversión
+          <span id="allocSavingsPct">0%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
