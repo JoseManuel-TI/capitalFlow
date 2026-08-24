@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CapitalFlow | Omaha System</title>
-  <link rel="stylesheet" href="style/app.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -67,14 +67,14 @@
           <div class="form-group">
             <label>Tipo</label>
             <select id="txType" onchange="updateCategories()">
-              <option value="income">💵 Ingreso</option>
-              <option value="expense">💳 Gasto</option>
+              <option value="income">💵 Ingreso (Recaudación)</option>
+              <option value="expense">💳 Gasto (Auto/Combustible/Otros)</option>
               <option value="saving">🏦 Ahorro / Inversión</option>
             </select>
           </div>
           <div class="form-group">
             <label>Monto ($)</label>
-            <input type="number" id="txAmount" placeholder="Ej. 50000" step="any" required>
+            <input type="number" id="txAmount" placeholder="Ej. 120000" step="any" required>
           </div>
           <div class="form-group">
             <label>Categoría</label>
@@ -87,7 +87,7 @@
         </div>
         <div class="form-group" style="margin-bottom: 12px;">
           <label>Descripción / Detalle</label>
-          <input type="text" id="txDesc" placeholder="Ej. Combustible, Honorarios, Supermercado..." required>
+          <input type="text" id="txDesc" placeholder="Ej. Recaudación diaria, Nafta, Alquiler auto..." required>
         </div>
         <button type="submit" class="btn-submit">Guardar Movimiento</button>
       </form>
@@ -101,10 +101,10 @@
 
   <!-- 3. SAVINGS VIEW -->
   <div id="view-savings" class="hidden">
-    <!-- Reto Semanal 7 Días -->
+    <!-- Reto Semanal Neto $700.000 -->
     <div class="section-card">
-      <div class="section-title">☀️ Reto Semanal 7 Días ($1.000.000)</div>
-      <p class="section-desc">Toca cada día al separar el capital de tu recaudación.</p>
+      <div class="section-title">☀️ Reto Ahorro Real Neto ($700.000 / 7 Días)</div>
+      <p class="section-desc">Monto limpio a separar tras cubrir los $500.000 de costos operativos (auto + nafta).</p>
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-label">Ahorrado en la Semana</div>
@@ -115,13 +115,13 @@
           <div class="kpi-value" id="weekPct">0%</div>
         </div>
       </div>
-      <div class="challenge-grid grid-10" id="weekContainer"></div>
+      <div class="challenge-grid grid-week" id="weekContainer"></div>
     </div>
 
     <!-- Reto 30 Días Hábito -->
     <div class="section-card">
       <div class="section-title">🎯 Reto Hábito 30 Días ($1.000)</div>
-      <p class="section-desc">Montos progresivos desde $10 a $56 para disciplina diaria.</p>
+      <p class="section-desc">Montos progresivos desde $10 a $56 para cultivar la disciplina diaria.</p>
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-label">Ahorrado</div>
@@ -141,7 +141,7 @@
     <div class="section-card">
       <div class="section-title">Distribución de Flujo (Regla 50 / 30 / 20)</div>
       <p class="section-desc">
-        "No gastes lo que queda después de ahorrar; ahorra primero y gasta lo que queda."
+        "No gastes lo que queda después de ahorrar; ahorra primero y gasta lo que queda." — Omaha System
       </p>
       
       <div class="ratio-bar">
@@ -152,7 +152,7 @@
 
       <div class="ratio-legend">
         <div class="legend-item" style="color: var(--expense);">
-          Gastos Básicos (Necesidades)
+          Gastos Básicos (Costos Auto / Fijos)
           <span id="allocNeedsPct">0%</span>
         </div>
         <div class="legend-item" style="color: var(--accent);">

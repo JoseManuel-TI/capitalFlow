@@ -274,15 +274,15 @@ input:focus, select:focus {
   gap: 8px;
 }
 
-.challenge-grid.grid-10 {
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+.challenge-grid.grid-week {
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 }
 
 .challenge-cell {
   background: var(--card-sub);
   border: 1.5px solid var(--border);
   border-radius: 8px;
-  padding: 10px 4px;
+  padding: 10px 6px;
   text-align: center;
   cursor: pointer;
   user-select: none;
@@ -294,10 +294,11 @@ input:focus, select:focus {
 }
 
 .challenge-cell .day {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-muted);
   display: block;
   margin-bottom: 2px;
+  font-weight: 700;
 }
 
 .challenge-cell .amt {

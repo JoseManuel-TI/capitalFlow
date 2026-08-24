@@ -1,8 +1,6 @@
-const CATEGORIES = {
-  income: ['Trabajo / Flujo Diario', 'Ingresos Extra', 'Rendimientos / Inversión', 'Otros Ingresos'],
-  expense: ['Transporte & Auto', 'Combustible & Mantenimiento', 'Comida & Hogar', 'Servicios & Alquiler', 'Educación / Cursos', 'Ocio & Salidas', 'Imprevistos'],
-  saving: ['Fondo de Emergencia', 'Reto 10 Días', 'Reto 30 Días', 'Inversión / CEDEARs', 'Capital para Proyectos']
-};
+// Constantes de configuración
+const WEEK_DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+const WEEK_AMOUNTS = [70000, 80000, 90000, 95000, 110000, 125000, 130000]; // Suma exacta: $700.000 ARS
 
 const MONTH_AMOUNTS = [
   10, 12, 14, 15, 16, 18,
@@ -12,15 +10,16 @@ const MONTH_AMOUNTS = [
   48, 50, 52, 54, 55, 56
 ];
 
-const TEN_DAY_AMOUNTS = [
-  120000, 140000, 160000, 170000, 190000,
-  210000, 220000, 240000, 270000, 280000
-];
+const CATEGORIES = {
+  income: ['Producción / Recaudación Diaria', 'Ingresos Extra', 'Rendimientos / Inversión', 'Otros Ingresos'],
+  expense: ['Alquiler del Auto', 'Combustible / Nafta', 'Mantenimiento / Auto', 'Comida / Supermercado', 'Servicios / Hogar', 'Educación / Cursos', 'Ocio & Salidas', 'Imprevistos'],
+  saving: ['Ahorro Real Semanal ($700k)', 'Fondo de Emergencia', 'Reto 30 Días ($1k)', 'Inversión / CEDEARs', 'Capital para Proyectos']
+};
 
 let state = {
   transactions: JSON.parse(localStorage.getItem('sys_transactions')) || [],
-  monthChecked: JSON.parse(localStorage.getItem('sys_month_challenge')) || [],
-  tenDayChecked: JSON.parse(localStorage.getItem('sys_tenday_challenge')) || []
+  weekChecked: JSON.parse(localStorage.getItem('sys_week_challenge')) || [],
+  monthChecked: JSON.parse(localStorage.getItem('sys_month_challenge')) || []
 };
 
 function switchTab(e, tabId) {
@@ -33,7 +32,7 @@ function switchTab(e, tabId) {
 
 function switchTabDirect(tabId) {
   document.querySelectorAll('.tab-btn').forEach(btn => {
-    if (btn.getAttribute('onclick').includes(tabId)) {
+    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId)) {
       btn.classList.add('active');
     } else {
       btn.classList.remove('active');
@@ -82,6 +81,16 @@ function deleteTransaction(id) {
   renderAll();
 }
 
+function toggleWeekCell(idx) {
+  if (state.weekChecked.includes(idx)) {
+    state.weekChecked = state.weekChecked.filter(i => i !== idx);
+  } else {
+    state.weekChecked.push(idx);
+  }
+  saveData();
+  renderChallenges();
+}
+
 function toggleMonthCell(idx) {
   if (state.monthChecked.includes(idx)) {
     state.monthChecked = state.monthChecked.filter(i => i !== idx);
@@ -92,20 +101,10 @@ function toggleMonthCell(idx) {
   renderChallenges();
 }
 
-function toggleTenDayCell(idx) {
-  if (state.tenDayChecked.includes(idx)) {
-    state.tenDayChecked = state.tenDayChecked.filter(i => i !== idx);
-  } else {
-    state.tenDayChecked.push(idx);
-  }
-  saveData();
-  renderChallenges();
-}
-
 function saveData() {
   localStorage.setItem('sys_transactions', JSON.stringify(state.transactions));
+  localStorage.setItem('sys_week_challenge', JSON.stringify(state.weekChecked));
   localStorage.setItem('sys_month_challenge', JSON.stringify(state.monthChecked));
-  localStorage.setItem('sys_tenday_challenge', JSON.stringify(state.tenDayChecked));
 }
 
 function renderAll() {
@@ -167,24 +166,24 @@ function renderHistory() {
 }
 
 function renderChallenges() {
-  // Reto 10 Días
-  const tenContainer = document.getElementById('tenDayContainer');
-  tenContainer.innerHTML = TEN_DAY_AMOUNTS.map((amt, idx) => {
-    const done = state.tenDayChecked.includes(idx);
+  // Reto Semanal Real ($700.000)
+  const weekContainer = document.getElementById('weekContainer');
+  weekContainer.innerHTML = WEEK_AMOUNTS.map((amt, idx) => {
+    const done = state.weekChecked.includes(idx);
     return `
-      <div class="challenge-cell ${done ? 'completed' : ''}" onclick="toggleTenDayCell(${idx})">
-        <span class="day">Día ${idx + 1}</span>
+      <div class="challenge-cell ${done ? 'completed' : ''}" onclick="toggleWeekCell(${idx})">
+        <span class="day">${WEEK_DAYS[idx]}</span>
         <span class="amt">$${amt.toLocaleString('es-AR')}</span>
       </div>
     `;
   }).join('');
 
-  const tenSaved = state.tenDayChecked.reduce((acc, idx) => acc + TEN_DAY_AMOUNTS[idx], 0);
-  const tenPct = Math.round((tenSaved / 2000000) * 100);
-  document.getElementById('tenDaySaved').textContent = `$${tenSaved.toLocaleString('es-AR')}`;
-  document.getElementById('tenDayPct').textContent = `${tenPct}%`;
+  const weekSaved = state.weekChecked.reduce((acc, idx) => acc + WEEK_AMOUNTS[idx], 0);
+  const weekPct = Math.round((weekSaved / 700000) * 100);
+  document.getElementById('weekSaved').textContent = `$${weekSaved.toLocaleString('es-AR')}`;
+  document.getElementById('weekPct').textContent = `${weekPct}%`;
 
-  // Reto 30 Días
+  // Reto 30 Días ($1.000)
   const monthContainer = document.getElementById('monthContainer');
   monthContainer.innerHTML = MONTH_AMOUNTS.map((amt, idx) => {
     const done = state.monthChecked.includes(idx);
