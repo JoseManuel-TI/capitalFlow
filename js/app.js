@@ -1,19 +1,19 @@
-// Constantes de configuración
+// Constantes de retos
 const WEEK_DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-const WEEK_AMOUNTS = [70000, 80000, 90000, 95000, 110000, 125000, 130000]; // Suma exacta: $700.000 ARS
+const WEEK_AMOUNTS = [100000, 110000, 120000, 130000, 160000, 180000, 200000]; // Suma: $1.000.000 ARS
 
 const MONTH_AMOUNTS = [
-  10, 12, 14, 15, 16, 18,
-  20, 22, 24, 25, 26, 28,
-  30, 32, 33, 34, 35, 36,
-  38, 40, 42, 44, 45, 46,
-  48, 50, 52, 54, 55, 56
-];
+  10000, 12000, 14000, 15000, 16000, 18000,
+  20000, 22000, 24000, 25000, 26000, 28000,
+  30000, 32000, 33000, 34000, 35000, 36000,
+  38000, 40000, 42000, 44000, 45000, 46000,
+  48000, 50000, 52000, 54000, 55000, 56000
+]; // Suma: $1.000.000 ARS
 
 const CATEGORIES = {
   income: ['Producción / Recaudación Diaria', 'Ingresos Extra', 'Rendimientos / Inversión', 'Otros Ingresos'],
   expense: ['Alquiler del Auto', 'Combustible / Nafta', 'Mantenimiento / Auto', 'Comida / Supermercado', 'Servicios / Hogar', 'Educación / Cursos', 'Ocio & Salidas', 'Imprevistos'],
-  saving: ['Ahorro Real Semanal ($700k)', 'Fondo de Emergencia', 'Reto 30 Días ($1k)', 'Inversión / CEDEARs', 'Capital para Proyectos']
+  saving: ['Reto Semanal ($1M)', 'Reto 30 Días ($1M)', 'Fondo de Emergencia', 'Inversión / CEDEARs', 'Capital para Proyectos']
 };
 
 let state = {
@@ -166,7 +166,7 @@ function renderHistory() {
 }
 
 function renderChallenges() {
-  // Reto Semanal Real ($700.000)
+  // Reto Semanal 7 Días ($1.000.000)
   const weekContainer = document.getElementById('weekContainer');
   weekContainer.innerHTML = WEEK_AMOUNTS.map((amt, idx) => {
     const done = state.weekChecked.includes(idx);
@@ -179,24 +179,24 @@ function renderChallenges() {
   }).join('');
 
   const weekSaved = state.weekChecked.reduce((acc, idx) => acc + WEEK_AMOUNTS[idx], 0);
-  const weekPct = Math.round((weekSaved / 700000) * 100);
+  const weekPct = Math.round((weekSaved / 1000000) * 100);
   document.getElementById('weekSaved').textContent = `$${weekSaved.toLocaleString('es-AR')}`;
   document.getElementById('weekPct').textContent = `${weekPct}%`;
 
-  // Reto 30 Días ($1.000)
+  // Reto 30 Días ($1.000.000)
   const monthContainer = document.getElementById('monthContainer');
   monthContainer.innerHTML = MONTH_AMOUNTS.map((amt, idx) => {
     const done = state.monthChecked.includes(idx);
     return `
       <div class="challenge-cell ${done ? 'completed' : ''}" onclick="toggleMonthCell(${idx})">
         <span class="day">D${idx + 1}</span>
-        <span class="amt">$${amt}</span>
+        <span class="amt">$${amt.toLocaleString('es-AR')}</span>
       </div>
     `;
   }).join('');
 
   const monthSaved = state.monthChecked.reduce((acc, idx) => acc + MONTH_AMOUNTS[idx], 0);
-  const monthPct = Math.round((monthSaved / 1000) * 100);
+  const monthPct = Math.round((monthSaved / 1000000) * 100);
   document.getElementById('monthSaved').textContent = `$${monthSaved.toLocaleString('es-AR')}`;
   document.getElementById('monthPct').textContent = `${monthPct}%`;
 }
