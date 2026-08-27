@@ -10,10 +10,23 @@ const MONTH_AMOUNTS = [
   48000, 50000, 52000, 54000, 55000, 56000
 ]; // Suma: $1.000.000 ARS
 
+// Categorías simplificadas únicamente por Banco / Billetera
 const CATEGORIES = {
-  income: ['Producción / Recaudación Diaria', 'Ingresos Extra', 'Rendimientos / Inversión', 'Otros Ingresos'],
-  expense: ['Alquiler del Auto', 'Combustible / Nafta', 'Mantenimiento / Auto', 'Comida / Supermercado', 'Servicios / Hogar', 'Educación / Cursos', 'Ocio & Salidas', 'Imprevistos'],
-  saving: ['Reto Semanal ($1M)', 'Reto 30 Días ($1M)', 'Fondo de Emergencia', 'Inversión / CEDEARs', 'Capital para Proyectos']
+  income: [
+    'Recaudación Diaria',
+    'Ingreso Extra / Otro'
+  ],
+  expense: [
+    'Brubank',
+    'Cuenta DNI',
+    'BBVA',
+    'Mercado Pago',
+    'Efectivo'
+  ],
+  saving: [
+    'Santander (Ahorro)',
+    'Bull Market (Inversión)'
+  ]
 };
 
 let state = {
@@ -135,7 +148,7 @@ function renderHistory() {
   const recentList = document.getElementById('dashboardRecentList');
 
   if (state.transactions.length === 0) {
-    const emptyMsg = '<div style="text-align:center; color:var(--text-muted); padding:20px;">Sin registros guardados.</div>';
+    const emptyMsg = '<div style="text-align:center; color:var(--text-muted); padding:20px;">Sin movimientos guardados.</div>';
     fullList.innerHTML = emptyMsg;
     recentList.innerHTML = emptyMsg;
     return;
@@ -151,7 +164,7 @@ function renderHistory() {
       <div class="tx-item">
         <div class="tx-info">
           <div class="tx-concept">${tx.desc}</div>
-          <div class="tx-meta">${tx.date} • ${tx.category}</div>
+          <div class="tx-meta">${tx.date} • <strong style="color:var(--accent);">${tx.category}</strong></div>
         </div>
         <div class="tx-amount-group">
           <div class="tx-amount ${colorClass}">${sign}$${tx.amount.toLocaleString('es-AR')}</div>
@@ -166,7 +179,7 @@ function renderHistory() {
 }
 
 function renderChallenges() {
-  // Reto Semanal 7 Días ($1.000.000)
+  // Reto Semanal ($1.000.000)
   const weekContainer = document.getElementById('weekContainer');
   weekContainer.innerHTML = WEEK_AMOUNTS.map((amt, idx) => {
     const done = state.weekChecked.includes(idx);
