@@ -82,7 +82,10 @@
           </div>
           <div class="form-group">
             <label>Fecha</label>
-            <input type="text" id="txDate" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="DD/MM/AAAA" aria-label="Fecha del movimiento, día, mes y año" oninput="formatDateInput(this)" required>
+            <div class="date-control">
+              <input type="date" id="txDate" aria-label="Fecha del movimiento" required>
+              <button type="button" class="btn-date-picker" onclick="openDatePicker()" aria-label="Abrir calendario">📅</button>
+            </div>
           </div>
         </div>
         <div class="form-group" style="margin-bottom: 12px;">
