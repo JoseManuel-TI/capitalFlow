@@ -1,14 +1,14 @@
 // Constantes de retos
 const WEEK_DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-const WEEK_AMOUNTS = [100000, 110000, 120000, 130000, 160000, 180000, 200000]; // Suma: $1.000.000 ARS
+const WEEK_AMOUNTS = [95000, 105000, 110000, 115000, 120000, 125000, 130000]; // Suma: $800.000 ARS
 
 const MONTH_AMOUNTS = [
-  10000, 12000, 14000, 15000, 16000, 18000,
-  20000, 22000, 24000, 25000, 26000, 28000,
-  30000, 32000, 33000, 34000, 35000, 36000,
-  38000, 40000, 42000, 44000, 45000, 46000,
-  48000, 50000, 52000, 54000, 55000, 56000
-]; // Suma: $1.000.000 ARS
+  20000, 24000, 28000, 30000, 32000, 36000,
+  40000, 44000, 48000, 50000, 52000, 56000,
+  60000, 64000, 66000, 68000, 70000, 72000,
+  76000, 80000, 84000, 88000, 90000, 92000,
+  96000, 100000, 104000, 108000, 110000, 112000
+]; // Suma exacta: $2.000.000 ARS
 
 // Categorías simplificadas únicamente por Banco / Billetera
 const CATEGORIES = {
@@ -201,7 +201,7 @@ function renderHistory() {
 }
 
 function renderChallenges() {
-  // Reto Semanal ($1.000.000)
+  // Reto Semanal ($800.000)
   const weekContainer = document.getElementById('weekContainer');
   weekContainer.innerHTML = WEEK_AMOUNTS.map((amt, idx) => {
     const done = state.weekChecked.includes(idx);
@@ -214,11 +214,11 @@ function renderChallenges() {
   }).join('');
 
   const weekSaved = state.weekChecked.reduce((acc, idx) => acc + WEEK_AMOUNTS[idx], 0);
-  const weekPct = Math.round((weekSaved / 1000000) * 100);
+  const weekPct = Math.round((weekSaved / 800000) * 100);
   document.getElementById('weekSaved').textContent = `$${weekSaved.toLocaleString('es-AR')}`;
   document.getElementById('weekPct').textContent = `${weekPct}%`;
 
-  // Reto 30 Días ($1.000.000)
+  // Reto 30 Días ($2.000.000)
   const monthContainer = document.getElementById('monthContainer');
   monthContainer.innerHTML = MONTH_AMOUNTS.map((amt, idx) => {
     const done = state.monthChecked.includes(idx);
@@ -231,7 +231,7 @@ function renderChallenges() {
   }).join('');
 
   const monthSaved = state.monthChecked.reduce((acc, idx) => acc + MONTH_AMOUNTS[idx], 0);
-  const monthPct = Math.round((monthSaved / 1000000) * 100);
+  const monthPct = Math.round((monthSaved / 2000000) * 100);
   document.getElementById('monthSaved').textContent = `$${monthSaved.toLocaleString('es-AR')}`;
   document.getElementById('monthPct').textContent = `${monthPct}%`;
 }
