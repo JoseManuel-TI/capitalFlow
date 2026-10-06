@@ -62,7 +62,7 @@ function updateCategories() {
 }
 
 function formatDateInput(input) {
-  const digits = input.value.replace(/\\D/g, '').slice(0, 8);
+  const digits = input.value.replace(/\D/g, '').slice(0, 8);
   if (digits.length > 4) {
     input.value = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
   } else if (digits.length > 2) {
@@ -73,7 +73,7 @@ function formatDateInput(input) {
 }
 
 function parseDateInput(value) {
-  const match = value.trim().match(/^(\\d{2})\\/(\\d{2})\\/(\\d{4})$/);
+  const match = value.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
   if (!match) return '';
 
   const day = Number(match[1]);
