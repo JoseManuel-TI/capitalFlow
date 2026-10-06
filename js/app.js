@@ -61,38 +61,27 @@ function updateCategories() {
   catSelect.innerHTML = CATEGORIES[type].map(c => `<option value="${c}">${c}</option>`).join('');
 }
 
-function formatDateInput(input) {
-  const digits = input.value.replace(/\D/g, '').slice(0, 8);
-  if (digits.length > 4) {
-    input.value = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
-  } else if (digits.length > 2) {
-    input.value = `${digits.slice(0, 2)}/${digits.slice(2)}`;
-  } else {
-    input.value = digits;
+function openDatePicker() {
+  const dateInput = document.getElementById('txDate');
+  try {
+    if (typeof dateInput.showPicker === 'function') {
+      dateInput.showPicker();
+    } else {
+      dateInput.focus();
+      dateInput.click();
+    }
+  } catch (error) {
+    dateInput.focus();
+    dateInput.click();
   }
 }
 
-function parseDateInput(value) {
-  const match = value.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if (!match) return '';
-
-  const day = Number(match[1]);
-  const month = Number(match[2]);
-  const year = Number(match[3]);
-  const parsed = new Date(Date.UTC(year, month - 1, day));
-
-  if (parsed.getUTCFullYear() !== year ||
-      parsed.getUTCMonth() !== month - 1 ||
-      parsed.getUTCDate() !== day) return '';
-
-  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-}
-
-function getLocalDateDisplay() {
+function getLocalISODate() {
   const now = new Date();
-  const day = String(now.getDate()).padStart(2, '0');
+  const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, '0');
-  return `${day}/${month}/${now.getFullYear()}`;
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function addTransaction(e) {
@@ -100,15 +89,10 @@ function addTransaction(e) {
   const type = document.getElementById('txType').value;
   const amount = parseFloat(document.getElementById('txAmount').value);
   const category = document.getElementById('txCategory').value;
-  const date = parseDateInput(document.getElementById('txDate').value);
+  const date = document.getElementById('txDate').value;
   const desc = document.getElementById('txDesc').value;
 
   if (!amount || amount <= 0) return;
-  if (!date) {
-    alert('Ingresá una fecha válida en formato DD/MM/AAAA.');
-    return;
-  }
-
   const newTx = {
     id: Date.now(),
     type,
@@ -121,7 +105,7 @@ function addTransaction(e) {
   state.transactions.unshift(newTx);
   saveData();
   document.getElementById('txForm').reset();
-  document.getElementById('txDate').value = getLocalDateDisplay();
+  document.getElementById('txDate').value = getLocalISODate();
   updateCategories();
   renderAll();
 }
@@ -314,6 +298,6 @@ function importData(e) {
 }
 
 // Inicializar al cargar
-document.getElementById('txDate').value = getLocalDateDisplay();
+document.getElementById('txDate').value = getLocalISODate();
 updateCategories();
 renderAll();
